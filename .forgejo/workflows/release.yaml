@@ -1,0 +1,37 @@
+name: Build and create release
+
+on:
+  push:
+    tags:
+      - v*
+
+env:
+  GOVERSION: 1.27.0
+  BUILD_NAME: mtg-cr-tool
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Setup Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: ${{ env.GOVERSION }}
+      - name: Run goreleaser
+        uses: goreleaser/goreleaser-action@v7
+        with:
+          distribution: goreleaser
+          version: '~> v2'
+          args: release --clean --skip=publish
+      - name: Create release
+        uses: softprops/action-gh-release@v3
+        with:
+          files: |
+            dist/*.tar.gz
+            dist/checksums.txt
+          token: ${{ secrets.CICD_PAT }}
+          body_path: dist/CHANGELOG.md
