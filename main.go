@@ -21,6 +21,12 @@ var (
 	reSafeFilename = regexp.MustCompile(`[^a-zA-Z0-9_]`)
 )
 
+// injected via ldflags
+var (
+	version = "local development build"
+	commit  = "no sha available"
+)
+
 func sanitizeFileName(name string) string {
 	clean := strings.ReplaceAll(name, " ", "_")
 	clean = reSafeFilename.ReplaceAllString(clean, "_")
@@ -29,14 +35,21 @@ func sanitizeFileName(name string) string {
 
 func main() {
 	var (
-		crPath    string
-		outputDir string
+		crPath      string
+		outputDir   string
+		showVersion bool
 	)
 
 	flag.StringVar(&crPath, "cr", "", "path to comprehensive rules file")
 	flag.StringVar(&outputDir, "o", "", "path to output directory")
+	flag.BoolVar(&showVersion, "v", false, "show version and exit")
 
 	flag.Parse()
+
+	if showVersion {
+		fmt.Printf("%s (%s)\n", version, commit)
+		os.Exit(0)
+	}
 
 	os.MkdirAll(outputDir, 0755)
 
