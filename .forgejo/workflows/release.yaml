@@ -26,12 +26,6 @@ jobs:
         with:
           distribution: goreleaser
           version: '~> v2'
-          args: release --clean --skip=publish
-      - name: Create release
-        uses: softprops/action-gh-release@v3
-        with:
-          files: |
-            dist/*.tar.gz
-            dist/checksums.txt
-          token: ${{ secrets.CICD_PAT }}
-          body_path: dist/CHANGELOG.md
+          args: release --clean
+        env:
+          GITEA_TOKEN: ${{ secrets.CICD_PAT }}

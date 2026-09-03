@@ -25,9 +25,13 @@ checksum:
 
 changelog:
   sort: asc
-  abbrev: 0
-  use: gitea
   filters:
     exclude:
       - "^docs:"
       - "^test:"
+
+gitea_urls:
+  api: https://git.on.eulenbu.de/api/v1
+  download: https://git.on.eulenbu.de
+
+force_token: gitea
